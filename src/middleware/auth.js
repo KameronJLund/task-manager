@@ -7,7 +7,7 @@ const auth = async (req, res, next) => {
         const decoded = jwt.decode(token, 'thisismynewcourse')
         const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
 
-        console.log(token)
+        // console.log(token)
 
         if (!user) throw new Error()
 
