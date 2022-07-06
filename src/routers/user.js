@@ -71,7 +71,7 @@ router.patch('/users/me', auth, async (req, res) => {
 
         // const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
 
-        res.send(user)
+        res.send(req.user)
     } catch (e) {
         res.status(400).send()
     }
