@@ -3,33 +3,9 @@ const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const app = require('../src/app')
 const User = require('../src/models/user')
+const { userOneId, userOne, userInvalidId, userInvalid, setupDatabase } = require('./fixtures/db.js')
 
-const userOneId = new mongoose.Types.ObjectId()
-const userOne = {
-    _id: userOneId,
-    name: 'Mike Hunt',
-    email: 'haha@example.com',
-    password: 'smellslikestrawberry',
-    tokens: [{
-        token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
-    }]
-}
-
-const userInvalidId = new mongoose.Types.ObjectId()
-const userInvalid = {
-    _id: userInvalidId,
-    name: 'Slide-in McQueen',
-    email: 'teehee@example.com',
-    password: 'carbussy',
-    tokens: [{
-        token: jwt.sign({ _id: userInvalidId }, process.env.JWT_SECRET)
-    }]
-}
-
-beforeEach(async () => {
-    await User.deleteMany()
-    await new User(userOne).save()
-})
+beforeEach(setupDatabase)
 
 test('should sign up new user', async () => {
     const response = await request(app).post('/users').send({
@@ -136,8 +112,4 @@ test('Should not update invalid user fields', async () => {
             address: 'right lane'
         })
         .expect(400)
-
-    const user = await User.findById(userOneId)
-
-    expect(user.address).toBeUndefined()
 })
